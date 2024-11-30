@@ -27,13 +27,6 @@ _Task WATCardOffice{
 	Job* requestWork() __attribute__((warn_unused_result));
 };
 
-_Monitor Bank{
-  public:
-	Bank(unsigned int numStudents);
-	void deposit(unsigned int id, unsigned int amount);
-	void withdraw(unsigned int id, unsigned int amount);
-};
-
 _Task Parent{
 	void main();
   public:
