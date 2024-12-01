@@ -8,8 +8,8 @@
 
 using namespace std;
 
-WATCardOffice::WATCardOffice(Printer& printer, Bank& bank, unsigned int numCouriers) :
-    printer(printer), bank(bank), numCouriers(numCouriers) {
+WATCardOffice::WATCardOffice(Printer& prt, Bank& bank, unsigned int numCouriers) :
+    printer(prt), bank(bank), numCouriers(numCouriers) {
 
     printer.print(Printer::Kind::WATCardOffice, 'S');    // starting
 

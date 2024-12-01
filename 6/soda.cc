@@ -1,17 +1,3 @@
-
-_Task Parent{
-	void main();
-  public:
-	Parent(Printer& prt, Bank& bank, unsigned int numStudents, unsigned int parentalDelay);
-};
-
-_Task Groupoff{
-	void main();
-  public:
-	Groupoff(Printer& prt, unsigned int numStudents, unsigned int sodaCost, unsigned int groupoffDelay);
-	WATCard::FWATCard giftCard(unsigned int id);
-};
-
 _Task VendingMachine{
 	void main();
   public:

@@ -8,8 +8,9 @@
 
 using namespace std;
 
-// _Monitor Bank;
-// _Monitor Printer;
+_Monitor Bank;
+_Monitor Printer;
+
 _Task WATCardOffice{
   struct Args { // args to create the card
     unsigned int sid;       // passed in
@@ -21,6 +22,7 @@ _Task WATCardOffice{
       WATCard::FWATCard result;			// return future
       Job(Args args) : args(args) {}
   };
+  // can modify as fit
   _Task Courier{   // talks to bank to create watCard on Office::create()
       unsigned int courierId;
       WATCardOffice& watCardOffice;     // transfer and request work from office

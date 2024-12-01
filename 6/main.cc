@@ -7,6 +7,8 @@
 #include "config.h"
 #include "printer.h"
 #include "bank.h"
+#include "WATcardoffice.h"
+#include "parent.h"
 using namespace std;
 
 int main(int argc, char* argv[]) {
