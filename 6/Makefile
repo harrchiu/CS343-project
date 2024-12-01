@@ -3,7 +3,7 @@ CXXFLAGS = -g -multi -Wall -Wextra -MMD # compiler flags
 MAKEFILE_NAME = ${firstword ${MAKEFILE_LIST}}	# makefile name
 
 OBJECTS = printer.o config.o bank.o WATcard.o WATcardoffice.o main.o   # list of object files
-EXEC = vote
+EXEC = soda
 
 DEPENDS = ${OBJECTS:.o=.d}			# substitute ".o" with ".d"
 
@@ -24,4 +24,4 @@ ${OBJECTS} : ${MAKEFILE_NAME}			# OPTIONAL : changes to this file => recompile
 -include ${DEPENDS}				# include *.d files containing program dependences
 
 clean :						# remove files that can be regenerated
-	rm -f *.d ${OBJECTS} ${EXEC} VoteImpl
+	rm -f *.d ${OBJECTS} ${EXEC} soda

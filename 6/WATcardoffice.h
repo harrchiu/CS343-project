@@ -6,43 +6,48 @@
 #include "printer.h"
 #include <queue>             // for queue of watcard creation jobs
 
-struct WATCardOffice::Args {
-  // args to create the card
-  unsigned int sid;       // passed in
-  unsigned int amount;    // starting amount
-  WATCard* card;        // the card
-}
+using namespace std;
 
+// _Monitor Bank;
+// _Monitor Printer;
 _Task WATCardOffice{
-    struct Job {							// marshalled arguments and return future
-        Args args; 							// call arguments (YOU DEFINE "Args")
-        WATCard::FWATCard result;			// return future
-        Job(Args args) : args(args) {}
-    };
-    _Task Courier {
-      void main()
-      public:
-        Courier()
+  struct Args { // args to create the card
+    unsigned int sid;       // passed in
+    unsigned int amount;    // starting amount
+    WATCard* card;        // the card
+  };
+  struct Job {							// marshalled arguments and return future
+      Args args; 							// call arguments (YOU DEFINE "Args")
+      WATCard::FWATCard result;			// return future
+      Job(Args args) : args(args) {}
+  };
+  _Task Courier{   // talks to bank to create watCard on Office::create()
+      unsigned int courierId;
+      WATCardOffice& watCardOffice;     // transfer and request work from office
+      Printer& printer;
+      Bank& bank;                       // make calls on behalf of student (transfer into watcard)
+      WATCard* watCard;                 // the watcard in question?
+      void main();
+    public:
+      Courier(unsigned int courierId, WATCardOffice& watCardOffice, Printer& printer, Bank& bank);
+  };					// communicates with bank
+  void main();
+public:
+  _Exception Lost {};						// lost WATCard
+  WATCardOffice(Printer& prt, Bank& bank, unsigned int numCouriers);
+  ~WATCardOffice();
 
-    };					// communicates with bank
+  WATCard::FWATCard create(unsigned int sid, unsigned int amount) __attribute__((warn_unused_result));
+  WATCard::FWATCard transfer(unsigned int sid, unsigned int amount, WATCard* card) __attribute__((warn_unused_result));
+  Job* requestWork() __attribute__((warn_unused_result));
 
-    void main();
-  public:
-    _Exception Lost {};						// lost WATCard
-    WATCardOffice(Printer& prt, Bank& bank, unsigned int numCouriers);
-    ~WATCardOffice();
+private:
+  Printer& printer;
+  Bank& bank;
+  unsigned int numCouriers;
+  queue<Job*> courierJobQueue;
 
-    WATCard::FWATCard create(unsigned int sid, unsigned int amount) __attribute__((warn_unused_result));
-    WATCard::FWATCard transfer(unsigned int sid, unsigned int amount, WATCard* card) __attribute__((warn_unused_result));
-    Job* requestWork() __attribute__((warn_unused_result));
-
-  private:
-    Printer& printer;
-    Bank& bank;
-    unsigned int numCouriers;
-    queue <
-
-    Courier* couriers;
+  Courier** couriers; // array of courier pointers
 };
 
 
