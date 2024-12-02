@@ -13,8 +13,6 @@ _Task BottlingPlant{
         unsigned int maxStockPerFlavour;
         unsigned int timeBetweenShipments;
 
-        unsigned int productionStock[Flavours::NUM_OF_FLAVOURS]; // current production stock
-
         uCondition truckWaiting; // condition variable for truck to wait for shipment
 
         void main();
@@ -25,6 +23,8 @@ _Task BottlingPlant{
                         unsigned int maxShippedPerFlavour, unsigned int maxStockPerFlavour,
                         unsigned int timeBetweenShipments);
         void getShipment(unsigned int cargo[]);
+    private:
+        unsigned int productionStock[Flavours::NUM_OF_FLAVOURS]; // current production stock
 };
 
 #endif // _botting_plant_h_
