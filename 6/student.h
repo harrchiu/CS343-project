@@ -1,7 +1,7 @@
-#IFNDEF _STUDENT_H_
-#DEFINE _STUDENT_H_
+#ifndef _STUDENT_H_
+#define _STUDENT_H_
 
-#include "WATCard.h"
+#include "WATcard.h"
 #include "groupoff.h"   // giftcard
 using namespace std;
 
@@ -21,4 +21,4 @@ _Task Student{
 };
 
 
-#ENDIF  // ifndef
+#endif  // ifndef
