@@ -27,15 +27,15 @@ void Student::main() {
 
     // for (int q = 0;q < 10;q++) {
     while (bottlesPurchased < purchaseGoal) {
-        std::cout << "s " << id << " purchased: " << bottlesPurchased << std::endl;
+        std::cout << "s " << id << " purchased: " << bottlesPurchased << "out of " << purchaseGoal << std::endl;
         yield(prng(1, 10));  // yield for a random time between 1 and 10
 
         // for (int w = 0;w < 1;w++) {  // busy wait to buy soda
         for (;;) {  // busy wait to buy soda
-            std::cout << "inside s " << id << " purchased: " << bottlesPurchased << std::endl;
+            // std::cout << "inside s " << id << " purchased: " << bottlesPurchased << std::endl;
             try {
                 _Select(giftCardFuture) {  // if giftcard is ready
-                    std::cout << "in giftcardfuture" << std::endl;
+                    // std::cout << "in giftcardfuture" << std::endl;
                     machine->buy(favouriteFlavour, *giftCardFuture());
                     std::cout << "resetting..." << std::endl;   // not getting here
                     printer.print(Printer::Kind::Student, id, 'G', favouriteFlavour, giftCardFuture()->getBalance());

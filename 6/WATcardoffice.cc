@@ -4,6 +4,7 @@
 #include "printer.h"
 
 #include <queue>  
+#include <iostream>  
 #include <uPRNG.h>          // lost watcard
 
 using namespace std;
@@ -22,7 +23,6 @@ WATCardOffice::WATCardOffice(Printer& prt, Bank& bank, unsigned int numCouriers)
 }
 // office dtor
 WATCardOffice::~WATCardOffice() {
-
     // clean up pending jobs
     while (!courierJobQueue.empty()) {
         delete courierJobQueue.front();
@@ -40,6 +40,7 @@ WATCardOffice::~WATCardOffice() {
         delete couriers[i];
     }
     printer.print(Printer::Kind::WATCardOffice, 'F');    // finished
+    std::cout << "watcardoffice dtor done" << std::endl;
 }
 
 // create() and transfer() have the same function of getting funds from the bank
@@ -83,7 +84,8 @@ void WATCardOffice::main() {
     // start printed in ctor
     for (;;) {
         _Accept(~WATCardOffice) {
-            break;  // stop this loop
+            std::cout << "watcardoffice dtor called back in main" << std::endl;
+            return;  // stop this loop
         }
         or _When(!courierJobQueue.empty()) _Accept(requestWork) {}
         or _Accept(create || transfer) {}
@@ -107,6 +109,8 @@ void WATCardOffice::Courier::main() {
         // get the latest job for this courier
         Job* currentJob = watCardOffice.requestWork();
         if (nullptr == currentJob) {
+            std::cout << "courier nullptr==currentjob" << std::endl;
+
             // stop executing once there are no more jobs
             // this gets called after the office dtor runs
             // and cleans out the job queue, so this exits
@@ -139,4 +143,5 @@ void WATCardOffice::Courier::main() {
     }
 
     printer.print(Printer::Kind::Courier, courierId, 'F'); // finishing
+    std::cout << "courier done" << std::endl;
 }
