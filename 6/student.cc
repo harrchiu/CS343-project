@@ -35,7 +35,7 @@ void Student::main() {
                     printer.print(Printer::Kind::Student, id, 'G', favouriteFlavour, giftCardFuture()->getBalance());
 
                     delete giftCardFuture();    // delete it before we reset since it's studnet responsibility
-                    giftCardFuture.reset();    // reset gift card
+                    giftCardFuture.reset();    // reset gift card because we will never use it again
                     bottlesPurchased++;         // did get bought!
                     break;
                 } or _Select(watCardFuture) {  // if watcard is ready
@@ -67,9 +67,16 @@ void Student::main() {
     }
 
     try {
-        _Enable{
-            WATCard * watCard = watCardFuture();
-            delete watCard;
+        _Enable{// chance that watCard is lost so catch the exception
+            // there is ALSO a change that the watCARD hasn't appeared yet
+            // (the student used a giftcard and fulfilled the 1 bottle)
+            // so now we have to wait for the future to deliver so we can delete
+            // the wat card - the student cannot destruct until the watcard is
+            // deleted here
+            _Select(watCardFuture) {
+                WATCard* watCard = watCardFuture();
+                delete watCard;
+            }
         };
     } _Catch(WATCardOffice::Lost&) {} // do nothing
 
