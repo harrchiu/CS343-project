@@ -2,7 +2,6 @@
 #include "printer.h"
 #include "vendingMachine.h"
 
-
 NameServer::NameServer(Printer& prt, unsigned int numVendingMachines, unsigned int numStudents) :
     printer(prt), numVendingMachines(numVendingMachines), numStudents(numStudents) {
 
@@ -18,6 +17,7 @@ NameServer::NameServer(Printer& prt, unsigned int numVendingMachines, unsigned i
 NameServer::~NameServer() {
     // delete array that holds the VMs
     delete[] vendingMachines;
+    delete[] modulos;
     // TODO: ensure that the VMs themselves are deleted elsewhere... or that main does it...
 
     printer.print(Printer::Kind::NameServer, 'F');  // finishing print

@@ -1,6 +1,9 @@
 #ifndef _name_server_h_
 #define _name_server_h_
 
+_Monitor Printer;
+_Task VendingMachine;   // forward ref
+
 _Task NameServer{
     Printer & printer;
     unsigned int numVendingMachines, numStudents;
@@ -12,6 +15,7 @@ _Task NameServer{
     // since VM1 goes to the 1st student, etc.
     VendingMachine** vendingMachines;
     unsigned int numRegisteredMachines = 0;
+
 
     void main();
   public:

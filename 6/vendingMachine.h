@@ -1,9 +1,12 @@
 #ifndef _vending_machine_h_
 #define _vending_machine_h_
 
+#include "bottlingPlant.h"
+#include "watcard.h"
+
 _Monitor Printer;
 
-#include "bottlingPlant.h"
+_Task NameServer;   // fwd reference
 
 _Task VendingMachine{
     Printer & printer;
@@ -11,9 +14,19 @@ _Task VendingMachine{
     unsigned const int id;      // constant after assignment
     unsigned const int sodaCost;
 
+    bool isBeingRestocked = false;  // need a state to keep track if the VM is currently being stocked
+
+
     // inventory of all flavours - should be constant on runtime
     // get index from enum
     unsigned int sodaInventory[BottlingPlant::Flavours::NUM_OF_FLAVOURS];
+
+    // for customer's order to be linked back to main(), where the logic should happen
+    BottlingPlant::Flavours customerFlavour;
+    WATCard& customerCard;
+    uCondition buyCond; // to block or allow blocked buyer to continue
+    enum BuyException { FUNDS, STOCK, FREE, NONE }; // communicate which error happened back to buyer
+    BuyException buyException = NONE;
 
     void main();
   public:
