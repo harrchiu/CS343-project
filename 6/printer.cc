@@ -61,7 +61,7 @@ unsigned int Printer::getDataArrIndex(Kind kind) {
         return 5;
     default:
         // for Student, Vending, Courier
-        cout << "PRINTER ERROR - Kind requires lid" << endl;
+        cout << "PRINTER ERROR - Kind requires lid -->" << kind << ":" << endl;
         throw;
     }
 }
@@ -76,7 +76,7 @@ unsigned int Printer::getDataArrIndex(Kind kind, unsigned int lid) {
         return 6 + numStudents + numVendingMachines + lid;
     default:
         // for those without lid
-        cout << "PRINTER ERROR - Kind should not be using lid" << endl;
+        cout << "PRINTER ERROR - Kind should not be using lid -- > " << kind << ":" << endl;
         throw;
     }
 }

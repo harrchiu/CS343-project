@@ -3,6 +3,7 @@
 
 _Monitor Printer{
   public:
+    // kind enum 
     enum Kind { Parent, Groupoff, WATCardOffice, NameServer, Truck, BottlingPlant, Student, Vending, Courier };
     Printer(unsigned int numStudents, unsigned int numVendingMachines, unsigned int numCouriers);
     ~Printer();

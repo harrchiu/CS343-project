@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "student.h"
 #include "printer.h"
 #include "nameServer.h"
@@ -6,7 +8,8 @@
 #include "vendingMachine.h"
 
 Student::Student(Printer& prt, NameServer& nameServer, WATCardOffice& cardOffice, Groupoff& groupoff,
-            unsigned int id, unsigned int maxPurchases) : printer(prt), nameServer(nameServer), cardOffice(cardOffice), groupoff(groupoff), id(id), maxPurchases(maxPurchases) {}
+    unsigned int id, unsigned int maxPurchases) : printer(prt), nameServer(nameServer), cardOffice(cardOffice), groupoff(groupoff), id(id), maxPurchases(maxPurchases) {
+}
 
 void Student::main() {
     BottlingPlant::Flavours favouriteFlavour = static_cast<BottlingPlant::Flavours>(prng(0, BottlingPlant::Flavours::NUM_OF_FLAVOURS)); // flavours are in the range [0, 3]
@@ -22,35 +25,49 @@ void Student::main() {
     unsigned int bottlesPurchased = 0;
     unsigned int freeSodas = 0;
 
+    // for (int q = 0;q < 10;q++) {
     while (bottlesPurchased < purchaseGoal) {
+        std::cout << "s " << id << " purchased: " << bottlesPurchased << std::endl;
         yield(prng(1, 10));  // yield for a random time between 1 and 10
 
+        // for (int w = 0;w < 1;w++) {  // busy wait to buy soda
         for (;;) {  // busy wait to buy soda
+            std::cout << "inside s " << id << " purchased: " << bottlesPurchased << std::endl;
             try {
                 _Select(giftCardFuture) {  // if giftcard is ready
+                    std::cout << "in giftcardfuture" << std::endl;
                     machine->buy(favouriteFlavour, *giftCardFuture());
+                    std::cout << "resetting..." << std::endl;   // not getting here
                     printer.print(Printer::Kind::Student, id, 'G', favouriteFlavour, giftCardFuture()->getBalance());
-                    delete giftCardFuture();    // delete the gift card??
+
+                    giftCardFuture.reset();    // delete the gift card??
+
+                    bottlesPurchased++;         // did get bought!
+                    break;
                 } or _Select(watCardFuture) {  // if watcard is ready
+                    std::cout << "in watcardfuture" << std::endl;
                     machine->buy(favouriteFlavour, *watCardFuture());
                     printer.print(Printer::Kind::Student, id, 'B', favouriteFlavour, watCardFuture()->getBalance());
+                    bottlesPurchased++;
+                    break;
                 }
-                bottlesPurchased++;
-                break;
-            } _Catch(VendingMachine::Funds &) {   // insufficient funds
+
+            } _Catch(VendingMachine::Funds&) {   // insufficient funds
+                std::cout << "inside funds error" << std::endl;
                 watCardFuture = cardOffice.transfer(id, machine->cost() + 5, watCardFuture());
-            } _Catch(WATCardOffice::Lost &) {  // if card is lost
+            } _Catch(WATCardOffice::Lost&) {  // if card is lost
                 printer.print(Printer::Kind::Student, id, 'L');
                 watCardFuture = cardOffice.create(id, 5);  // create a new card
-            } _Catch(VendingMachine::Free &) {  // if vending machine gives a free soda
+            } _Catch(VendingMachine::Free&) {  // if vending machine gives a free soda
                 freeSodas++;
                 printer.print(Printer::Kind::Student, id, 'A', favouriteFlavour);
                 if (prng(1, 2) == 1) {  // 50% chance of watching an ad
                     yield(4);
-                } else {
+                }
+                else {
                     printer.print(Printer::Kind::Student, id, 'X'); // did not watch ad
                 }
-            } _Catch(VendingMachine::Stock &) {  // if vending machine is out of stock
+            } _Catch(VendingMachine::Stock&) {  // if vending machine is out of stock
                 machine = nameServer.getMachine(id);  // get a new vending machine
                 printer.print(Printer::Kind::Student, id, 'V', machine->getId());
             }

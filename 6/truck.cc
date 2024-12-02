@@ -4,11 +4,16 @@
 #include "bottlingPlant.h"
 #include "vendingMachine.h"
 
-Truck::Truck( Printer & prt, NameServer & nameServer, BottlingPlant & plant,
-        unsigned int numVendingMachines, unsigned int maxStockPerFlavour ) :
-        printer(prt), nameServer(nameServer), plant(plant), 
-        numVendingMachines(numVendingMachines), 
-        maxStockPerFlavour(maxStockPerFlavour) {}
+Truck::Truck(Printer& prt, NameServer& nameServer, BottlingPlant& plant,
+    unsigned int numVendingMachines, unsigned int maxStockPerFlavour) :
+    printer(prt), nameServer(nameServer), plant(plant),
+    numVendingMachines(numVendingMachines),
+    maxStockPerFlavour(maxStockPerFlavour) {
+    cargo = new unsigned int[BottlingPlant::Flavours::NUM_OF_FLAVOURS];
+    for (int i = 0;i < BottlingPlant::Flavours::NUM_OF_FLAVOURS;i++) {
+        cargo[i] = 0;
+    }
+}
 
 Truck::~Truck() {
     delete[] cargo;
@@ -24,7 +29,7 @@ void Truck::main() {
 
         try {
             plant.getShipment(cargo);   // get shipment from bottling plant
-        } _Catch (BottlingPlant::Shutdown &) {  // shutdown plant
+        } _Catch(BottlingPlant::Shutdown&) {  // shutdown plant
             printer.print(Printer::Kind::Truck, 'F');
             return;
         }
@@ -52,7 +57,7 @@ void Truck::main() {
                 totalStock -= flavourRestocked;  // if the machine needs less than what is on the truck, subtract the whole amount
                 cargo[i] -= flavourRestocked;
             }
-            
+
             if (unsuccessful > 0) printer.print(Printer::Kind::Truck, 'U', curMachine, unsuccessful);   // unsuccesful restock
 
             vendingMachines[curMachine]->restocked();   // restock the machine complete

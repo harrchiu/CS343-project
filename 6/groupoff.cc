@@ -1,3 +1,4 @@
+#include <iostream>
 #include "groupoff.h"
 #include "printer.h"
 #include "WATcard.h"
@@ -26,10 +27,12 @@ void Groupoff::main() {
     }
     // now randomly swap
     for (unsigned int counter = 0; counter < numStudents; counter += 1) {
-        // swap(replacementOrder[0], replacementOrder[prng(numStudents)]);
+        std::swap(replacementOrder[0], replacementOrder[prng(numStudents)]);
         // i mean this supposedly produces a more uniform shuffle than the
         // one used in the prev assn so idk
-        std::swap(replacementOrder[counter], replacementOrder[prng(numStudents - 1 - counter)]);
+        // std::cout << "swapping " << numStudents - 1 - counter << std::endl;
+        // std::swap(replacementOrder[counter], replacementOrder[prng(numStudents - 1 - counter)]);
+        // std::cout << "hi" << std::endl;
     }
 
     // stop looping after giving out all gift cards

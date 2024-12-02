@@ -11,7 +11,7 @@ VendingMachine::VendingMachine(Printer& prt, NameServer& nameServer, unsigned in
     }
 
     // has an lid
-    printer.print(Printer::Kind::Vending, 'S', id, sodaCost);  // starting print
+    printer.print(Printer::Kind::Vending, id, 'S', sodaCost);  // starting print
 }
 
 void VendingMachine::buy(BottlingPlant::Flavours flavour, WATCard& card) {
@@ -60,11 +60,11 @@ void VendingMachine::main() {
         }
         or _Accept(inventory) { // should happen FIRST
             isBeingRestocked = true;
-            printer.print(Printer::Kind::Vending, 'r');  // start reloading by truck
+            printer.print(Printer::Kind::Vending, id, 'r');  // start reloading by truck
         }
         or _Accept(restocked) {    // need this reset flip after inventory
             isBeingRestocked = false;
-            printer.print(Printer::Kind::Vending, 'R');  // complete reloading by truck
+            printer.print(Printer::Kind::Vending, id, 'R');  // complete reloading by truck
         }
         or _When(!isBeingRestocked) _Accept(buy) {  // cannot accept buy calls during restocking
             // need main to handle the exception
@@ -78,7 +78,7 @@ void VendingMachine::main() {
             else {  // purchase is possible
                 if (prng(5) == 0) { // free
                     buyException = FREE;
-                    printer.print(Printer::Kind::Vending, 'A');  // free drink
+                    printer.print(Printer::Kind::Vending, id, 'A');  // free drink
                 }
                 else {
                     buyException = NONE;
@@ -90,5 +90,5 @@ void VendingMachine::main() {
         }
     }   // for
 
-    printer.print(Printer::Kind::Vending, 'F', id);  // finishing print
+    printer.print(Printer::Kind::Vending, id, 'F');  // finishing print
 }
