@@ -1,24 +1,30 @@
-#IFNDEF _STUDENT_H_
-#DEFINE _STUDENT_H_
+#ifndef _student_h_
+#define _student_h_
 
-#include "WATCard.h"
+_Monitor Printer;
+
+#include "WATcard.h"
+#include "WATcardoffice.h"
 #include "groupoff.h"   // giftcard
+#include "nameServer.h"
+
 using namespace std;
 
 _Task Student{
+    Printer& printer;
+    NameServer& nameServer;
+    WATCardOffice& cardOffice;
+    Groupoff& groupoff;
     unsigned int id;
-    unsigned int numPurchases, favFlavour;
-    WATCard watCard;
-    Groupoff groupoff;
+    unsigned int maxPurchases;
 
-    // wtf we need all these things first
+    // WATCard::FWATCard watCardFuture;
+    // WATCard::FWATCard giftCardFuture;
 
-
-        void main();
-      public:
-        Student(Printer& prt, NameServer& nameServer, WATCardOffice& cardOffice, Groupoff& groupoff,
-                 unsigned int id, unsigned int maxPurchases);
+    void main();
+  public:
+    Student(Printer& prt, NameServer& nameServer, WATCardOffice& cardOffice, Groupoff& groupoff,
+              unsigned int id, unsigned int maxPurchases);
 };
 
-
-#ENDIF  // ifndef
+#endif  // _student_h_

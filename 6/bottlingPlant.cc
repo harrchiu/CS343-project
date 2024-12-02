@@ -1,19 +1,21 @@
 #include "bottlingPlant.h"
+#include "truck.h"
+#include "printer.h"
 
 BottlingPlant::BottlingPlant(Printer& prt, NameServer& nameServer, unsigned int numVendingMachines,
     unsigned int maxShippedPerFlavour, unsigned int maxStockPerFlavour,
     unsigned int timeBetweenShipments) :
     printer(prt), nameServer(nameServer),
     numVendingMachines(numVendingMachines),
-    maxStockPerFlavour(maxStockPerFlavour),
     maxShippedPerFlavour(maxShippedPerFlavour),
+    maxStockPerFlavour(maxStockPerFlavour),
     timeBetweenShipments(timeBetweenShipments) {
 }
 
 void BottlingPlant::getShipment(unsigned int cargo[]) {
     for (unsigned int i = 0; i < NUM_OF_FLAVOURS; ++i) {
-        cargo[i] = production[i];   // copy production to cargo
-        production[i] = 0;          // reset production
+        cargo[i] = productionStock[i];   // copy production to cargo
+        productionStock[i] = 0;          // reset production
     }
     truckWaiting.signalBlock();     // wait for new production
 }
@@ -28,8 +30,8 @@ void BottlingPlant::main() {
 
         unsigned int totalProduced = 0;
         for (unsigned int i = 0; i < NUM_OF_FLAVOURS; ++i) {
-            production[i] = prng(maxShippedPerFlavour);
-            totalProduced += production[i];
+            productionStock[i] = prng(maxShippedPerFlavour);
+            totalProduced += productionStock[i];
         }
         printer.print(Printer::Kind::BottlingPlant, 'G', totalProduced);
 
