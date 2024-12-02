@@ -49,42 +49,41 @@ int main(int argc, char* argv[]) {
         set_seed(seed);
     }
 
-    {
-        // set params
-        ConfigParms config;  // use method to load these
-        processConfigFile(configFile.c_str(), config);
+    // set params
+    ConfigParms config;  // use method to load these
+    processConfigFile(configFile.c_str(), config);
 
-        // define each entity on stack
-        Printer printer(config.numStudents, config.numVendingMachines, config.numCouriers);
-        Bank bank(config.numStudents);
-        WATCardOffice cardOffice(printer, bank, config.numCouriers);
-        Groupoff groupoff(printer, config.numStudents, config.sodaCost, config.groupoffDelay);
-        Parent parent(printer, bank, config.numStudents, config.parentalDelay);
-        NameServer nameServer(printer, config.numVendingMachines, config.numStudents);
-        VendingMachine* vendingMachines[config.numVendingMachines];
+    // define each entity on stack
+    Printer printer(config.numStudents, config.numVendingMachines, config.numCouriers);
+    Bank bank(config.numStudents);
+    WATCardOffice cardOffice(printer, bank, config.numCouriers);
+    Groupoff groupoff(printer, config.numStudents, config.sodaCost, config.groupoffDelay);
+    Parent parent(printer, bank, config.numStudents, config.parentalDelay);
+    NameServer nameServer(printer, config.numVendingMachines, config.numStudents);
+    VendingMachine* vendingMachines[config.numVendingMachines];
 
-        // construct VMs
-        for (unsigned int i = 0; i < config.numVendingMachines; i++) {
-            vendingMachines[i] = new VendingMachine(printer, nameServer, i, config.sodaCost);
-        }
+    // construct VMs
+    for (unsigned int i = 0; i < config.numVendingMachines; i++) {
+        vendingMachines[i] = new VendingMachine(printer, nameServer, i, config.sodaCost);
+    }
 
-        // plant needs to be deleted after students and before VMs to finish final deliveries to prevent deadlock
-        BottlingPlant* bottlingPlant = new BottlingPlant(printer, nameServer, config.numVendingMachines,
-            config.maxShippedPerFlavour, config.maxStockPerFlavour,
-            config.timeBetweenShipments);
+    // plant needs to be deleted after students and before VMs to finish final deliveries to prevent deadlock
+    BottlingPlant* bottlingPlant = new BottlingPlant(printer, nameServer, config.numVendingMachines,
+        config.maxShippedPerFlavour, config.maxStockPerFlavour,
+        config.timeBetweenShipments);
 
-        Student* students[config.numStudents];
-        for (unsigned int i = 0; i < config.numStudents; i++) {
-            students[i] = new Student(printer, nameServer, cardOffice, groupoff, i, config.maxPurchases);  // will start in scope interacting with others
-        }
-        
-        for (unsigned int i = 0; i < config.numStudents; i++) {    // students done
-            delete students[i];
-        }
-        delete bottlingPlant;
-        // clean up VMs (only vm array deleted in nameServer, not the VMs)
-        for (unsigned int i = 0; i < config.numVendingMachines; ++i) {
-            delete vendingMachines[i];
-        }
+    Student* students[config.numStudents];
+    for (unsigned int i = 0; i < config.numStudents; i++) {
+        students[i] = new Student(printer, nameServer, cardOffice, groupoff, i, config.maxPurchases);  // will start in scope interacting with others
+    }
+
+    for (unsigned int i = 0; i < config.numStudents; i++) {    // students done
+        delete students[i];
+    }
+    delete bottlingPlant;       // delete plant first to finish shipment
+
+    // clean up VMs (only vm array deleted in nameServer, not the VMs)
+    for (unsigned int i = 0; i < config.numVendingMachines; ++i) {
+        delete vendingMachines[i];
     }
 }

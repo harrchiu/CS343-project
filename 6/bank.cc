@@ -2,7 +2,7 @@
 
 Bank::Bank(unsigned int numStudents) {
     bankAccounts = new unsigned int[numStudents];
-    memset(bankAccounts, 0, sizeof(*bankAccounts));  // init all balances to 0
+    memset(bankAccounts, 0, numStudents * sizeof(*bankAccounts));  // init all balances to 0
 }
 Bank::~Bank() {
     delete[] bankAccounts;

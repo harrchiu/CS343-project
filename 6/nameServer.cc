@@ -9,7 +9,7 @@ NameServer::NameServer(Printer& prt, unsigned int numVendingMachines, unsigned i
     printer.print(Printer::Kind::NameServer, 'S');  // starting print
 
     modulos = new unsigned int[numStudents];
-    memset(modulos, 0, sizeof(*modulos));  // init all mods to 0
+    memset(modulos, 0, numStudents * sizeof(*modulos));  // init all mods to 0
 
     // initialize space to hold all the vending machines (in registration order)
     vendingMachines = new VendingMachine * [numVendingMachines];    // empty for now

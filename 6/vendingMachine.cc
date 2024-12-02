@@ -76,15 +76,17 @@ void VendingMachine::main() {
                 buyException = STOCK;
             }
             else {  // purchase is possible
+                sodaInventory[customerFlavour] -= 1;    // customer takes drink
                 if (prng(5) == 0) { // free
                     buyException = FREE;
                     printer.print(Printer::Kind::Vending, id, 'A');  // free drink
                 }
                 else {
+                    // inventory already decremented
+                    printer.print(Printer::Kind::Vending, id, 'B', customerFlavour, sodaInventory[customerFlavour]);  // free drink
                     buyException = NONE;
                     customerCard->withdraw(sodaCost);   // withdraw
                 }
-                sodaInventory[customerFlavour] -= 1;    // customer takes drink
             }
             buyCond.signalBlock();  // block so buy can throw exception
         }

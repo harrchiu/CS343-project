@@ -34,6 +34,7 @@ void Student::main() {
                     machine->buy(favouriteFlavour, *giftCardFuture());
                     printer.print(Printer::Kind::Student, id, 'G', favouriteFlavour, giftCardFuture()->getBalance());
 
+                    delete giftCardFuture();    // delete it before we reset since it's studnet responsibility
                     giftCardFuture.reset();    // reset gift card
                     bottlesPurchased++;         // did get bought!
                     break;
@@ -66,13 +67,11 @@ void Student::main() {
     }
 
     try {
-        _Enable {
-            WATCard *watCard = watCardFuture();
+        _Enable{
+            WATCard * watCard = watCardFuture();
             delete watCard;
-        }
-    } _Catch(WATCardOffice::Lost &) {
-        // do nothing
-    }
+        };
+    } _Catch(WATCardOffice::Lost&) {} // do nothing
 
     printer.print(Printer::Kind::Student, id, 'F', bottlesPurchased, freeSodas);
 }

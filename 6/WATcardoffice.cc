@@ -130,6 +130,7 @@ void WATCardOffice::Courier::main() {
         // set the job result accordingly
         if (prng(6) == 0) {        // generates [0,5] - lost
             // currentJob->result.exception(new Lost());
+            delete watCard;
             currentJob->result.delivery(new Lost());   // exception is deprecated? if this doesn't work then
             printer.print(Printer::Kind::Courier, courierId, 'L', studentId); // lost watcard
         }
