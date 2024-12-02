@@ -26,7 +26,7 @@ NameServer::~NameServer() {
 void NameServer::VMregister(VendingMachine* vendingmachine) {
     // register by adding to current place in array
     printer.print(Printer::Kind::NameServer, 'R', vendingmachine->getId());
-    vendingMachines[numRegisteredMachines] = vendingMachine;
+    vendingMachines[numRegisteredMachines] = vendingmachine;
     numRegisteredMachines += 1; // update for next
 }
 

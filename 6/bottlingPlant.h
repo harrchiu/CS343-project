@@ -1,9 +1,8 @@
 #ifndef _bottling_plant_h_
 #define _bottling_plant_h_
 
-#include "printer.h"
-#include "nameServer.h"
-#include "truck.h"
+_Monitor Printer;
+_Task NameServer;   // fwd declaration
 
 _Task BottlingPlant{
         Printer & printer;

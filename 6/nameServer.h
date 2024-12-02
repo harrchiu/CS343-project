@@ -20,6 +20,7 @@ _Task NameServer{
     void main();
   public:
     NameServer(Printer& prt, unsigned int numVendingMachines, unsigned int numStudents);
+    ~NameServer();
     void VMregister(VendingMachine* vendingmachine);
 
     // does the lookup on student id and machine

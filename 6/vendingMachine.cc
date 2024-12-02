@@ -69,7 +69,7 @@ void VendingMachine::main() {
         or _When(!isBeingRestocked) _Accept(buy) {  // cannot accept buy calls during restocking
             // need main to handle the exception
             // check first if sufficient funds, then if avail
-            if (customerCard.getBalance() < sodaCost) {
+            if (customerCard->getBalance() < sodaCost) {
                 buyException = FUNDS;
             }
             else if (sodaInventory[customerFlavour] == 0) {

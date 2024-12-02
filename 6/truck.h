@@ -1,22 +1,25 @@
 #ifndef _truck_h_
 #define _truck_h_
 
-_Monitor Printer;
 
 #include "nameServer.h"
 #include "bottlingPlant.h"
 
-_Task Truck {
+_Monitor Printer;
+_Task NameServer;
+_Task BottlingPlant;    // fwd ref
+
+_Task Truck{
         void main();
-        Printer printer;
-        NameServer nameServer;
-        BottlingPlant plant;
+        Printer& printer;
+        NameServer& nameServer;
+        BottlingPlant& plant;
         unsigned int numVendingMachines;
         unsigned int maxStockPerFlavour;
-        unsigned int *cargo;
+        unsigned int* cargo;
     public:
-        Truck( Printer & prt, NameServer & nameServer, BottlingPlant & plant,
-        unsigned int numVendingMachines, unsigned int maxStockPerFlavour );
+        Truck(Printer& prt, NameServer& nameServer, BottlingPlant& plant,
+        unsigned int numVendingMachines, unsigned int maxStockPerFlavour);
         ~Truck();
 };
 

@@ -2,7 +2,7 @@
 #define _vending_machine_h_
 
 #include "bottlingPlant.h"
-#include "watcard.h"
+#include "WATcard.h"
 
 _Monitor Printer;
 
@@ -23,7 +23,7 @@ _Task VendingMachine{
 
     // for customer's order to be linked back to main(), where the logic should happen
     BottlingPlant::Flavours customerFlavour;
-    WATCard& customerCard;
+    WATCard* customerCard;
     uCondition buyCond; // to block or allow blocked buyer to continue
     enum BuyException { FUNDS, STOCK, FREE, NONE }; // communicate which error happened back to buyer
     BuyException buyException = NONE;
