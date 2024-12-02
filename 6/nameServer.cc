@@ -1,6 +1,7 @@
 #include "nameServer.h"
 #include "printer.h"
 #include "vendingMachine.h"
+#include <iostream>
 
 NameServer::NameServer(Printer& prt, unsigned int numVendingMachines, unsigned int numStudents) :
     printer(prt), numVendingMachines(numVendingMachines), numStudents(numStudents) {
@@ -59,7 +60,9 @@ void NameServer::main() {
     }
 
     for (;;) {
-        _Accept(~NameServer) {}
+        _Accept(~NameServer) {
+            return;
+        }
         or _Accept(getMachineList) {}
         or _Accept(getMachine) {}
     }

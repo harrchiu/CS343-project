@@ -25,27 +25,19 @@ void Student::main() {
     unsigned int bottlesPurchased = 0;
     unsigned int freeSodas = 0;
 
-    // for (int q = 0;q < 10;q++) {
     while (bottlesPurchased < purchaseGoal) {
-        std::cout << "s " << id << " purchased: " << bottlesPurchased << "out of " << purchaseGoal << std::endl;
         yield(prng(1, 10));  // yield for a random time between 1 and 10
 
-        // for (int w = 0;w < 1;w++) {  // busy wait to buy soda
         for (;;) {  // busy wait to buy soda
-            // std::cout << "inside s " << id << " purchased: " << bottlesPurchased << std::endl;
             try {
                 _Select(giftCardFuture) {  // if giftcard is ready
-                    // std::cout << "in giftcardfuture" << std::endl;
                     machine->buy(favouriteFlavour, *giftCardFuture());
-                    std::cout << "resetting..." << std::endl;   // not getting here
                     printer.print(Printer::Kind::Student, id, 'G', favouriteFlavour, giftCardFuture()->getBalance());
 
-                    giftCardFuture.reset();    // delete the gift card??
-
+                    giftCardFuture.reset();    // reset gift card
                     bottlesPurchased++;         // did get bought!
                     break;
                 } or _Select(watCardFuture) {  // if watcard is ready
-                    std::cout << "in watcardfuture" << std::endl;
                     machine->buy(favouriteFlavour, *watCardFuture());
                     printer.print(Printer::Kind::Student, id, 'B', favouriteFlavour, watCardFuture()->getBalance());
                     bottlesPurchased++;
@@ -53,7 +45,6 @@ void Student::main() {
                 }
 
             } _Catch(VendingMachine::Funds&) {   // insufficient funds
-                std::cout << "inside funds error" << std::endl;
                 watCardFuture = cardOffice.transfer(id, machine->cost() + 5, watCardFuture());
             } _Catch(WATCardOffice::Lost&) {  // if card is lost
                 printer.print(Printer::Kind::Student, id, 'L');
@@ -72,6 +63,15 @@ void Student::main() {
                 printer.print(Printer::Kind::Student, id, 'V', machine->getId());
             }
         }
+    }
+
+    try {
+        _Enable {
+            WATCard *watCard = watCardFuture();
+            delete watCard;
+        }
+    } _Catch(WATCardOffice::Lost &) {
+        // do nothing
     }
 
     printer.print(Printer::Kind::Student, id, 'F', bottlesPurchased, freeSodas);

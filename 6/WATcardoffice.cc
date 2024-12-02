@@ -39,8 +39,8 @@ WATCardOffice::~WATCardOffice() {
     for (unsigned int i = 0;i < numCouriers;i++) {
         delete couriers[i];
     }
+    delete[] couriers;
     printer.print(Printer::Kind::WATCardOffice, 'F');    // finished
-    std::cout << "watcardoffice dtor done" << std::endl;
 }
 
 // create() and transfer() have the same function of getting funds from the bank
@@ -84,7 +84,6 @@ void WATCardOffice::main() {
     // start printed in ctor
     for (;;) {
         _Accept(~WATCardOffice) {
-            std::cout << "watcardoffice dtor called back in main" << std::endl;
             return;  // stop this loop
         }
         or _When(!courierJobQueue.empty()) _Accept(requestWork) {}
@@ -102,6 +101,8 @@ WATCardOffice::Courier::Courier(unsigned int courierId, WATCardOffice& watCardOf
     printer.print(Printer::Kind::Courier, courierId, 'S'); // starting
 };
 
+WATCardOffice::Courier::~Courier() {}
+
 // main for courier to transfer funds from student bank to WATCard (provided)
 void WATCardOffice::Courier::main() {
     // start printer in ctor
@@ -109,8 +110,6 @@ void WATCardOffice::Courier::main() {
         // get the latest job for this courier
         Job* currentJob = watCardOffice.requestWork();
         if (nullptr == currentJob) {
-            std::cout << "courier nullptr==currentjob" << std::endl;
-
             // stop executing once there are no more jobs
             // this gets called after the office dtor runs
             // and cleans out the job queue, so this exits
@@ -143,5 +142,4 @@ void WATCardOffice::Courier::main() {
     }
 
     printer.print(Printer::Kind::Courier, courierId, 'F'); // finishing
-    std::cout << "courier done" << std::endl;
 }

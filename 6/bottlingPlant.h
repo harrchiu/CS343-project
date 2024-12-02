@@ -21,7 +21,6 @@ _Task BottlingPlant{
         BottlingPlant(Printer& prt, NameServer& nameServer, unsigned int numVendingMachines,
                         unsigned int maxShippedPerFlavour, unsigned int maxStockPerFlavour,
                         unsigned int timeBetweenShipments);
-        ~BottlingPlant();
         void getShipment(unsigned int cargo[]);
     private:
         unsigned int productionStock[Flavours::NUM_OF_FLAVOURS]; // current production stock

@@ -5,9 +5,12 @@
 
 Groupoff::Groupoff(Printer& prt, unsigned int numStudents, unsigned int sodaCost, unsigned int groupoffDelay) :
     printer(prt), numStudents(numStudents), sodaCost(sodaCost), groupoffDelay(groupoffDelay) {
-
-    cards = new WATCard::FWATCard[numStudents];     // deleted by the students?
+    cards = new WATCard::FWATCard[numStudents];
     printer.print(Printer::Kind::Groupoff, 'S');  // starting print
+}
+
+Groupoff::~Groupoff() {
+    delete[] cards;
 }
 
 void Groupoff::main() {
@@ -30,9 +33,7 @@ void Groupoff::main() {
         std::swap(replacementOrder[0], replacementOrder[prng(numStudents)]);
         // i mean this supposedly produces a more uniform shuffle than the
         // one used in the prev assn so idk
-        // std::cout << "swapping " << numStudents - 1 - counter << std::endl;
         // std::swap(replacementOrder[counter], replacementOrder[prng(numStudents - 1 - counter)]);
-        // std::cout << "hi" << std::endl;
     }
 
     // stop looping after giving out all gift cards

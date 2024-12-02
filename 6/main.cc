@@ -55,35 +55,27 @@ int main(int argc, char* argv[]) {
         processConfigFile(configFile.c_str(), config);
 
         // define each entity on stack
-        // Printer printer(config.numStudents, config.numVendingMachines, config.numCouriers);
-        // Bank bank(config.numStudents);
-        // WATCardOffice cardOffice(printer, bank, config.numCouriers);
-        // Groupoff groupoff(printer, config.numStudents, config.sodaCost, config.groupoffDelay);
-        // Parent parent(printer, bank, config.numStudents, config.parentalDelay);
-        // NameServer nameServer(printer, config.numVendingMachines, config.numStudents);
-        VendingMachine* vendingMachines[config.numVendingMachines];
         Printer printer(config.numStudents, config.numVendingMachines, config.numCouriers);
         Bank bank(config.numStudents);
-
-        WATCardOffice* cardOffice = new WATCardOffice(printer, bank, config.numCouriers);
-        Groupoff* groupoff = new Groupoff(printer, config.numStudents, config.sodaCost, config.groupoffDelay);
-        Parent* parent = new Parent(printer, bank, config.numStudents, config.parentalDelay);
-        NameServer* nameServer = new NameServer(printer, config.numVendingMachines, config.numStudents);
+        WATCardOffice cardOffice(printer, bank, config.numCouriers);
+        Groupoff groupoff(printer, config.numStudents, config.sodaCost, config.groupoffDelay);
+        Parent parent(printer, bank, config.numStudents, config.parentalDelay);
+        NameServer nameServer(printer, config.numVendingMachines, config.numStudents);
+        VendingMachine* vendingMachines[config.numVendingMachines];
 
         // construct VMs
         for (unsigned int i = 0; i < config.numVendingMachines; i++) {
-            vendingMachines[i] = new VendingMachine(printer, *nameServer, i, config.sodaCost);
+            vendingMachines[i] = new VendingMachine(printer, nameServer, i, config.sodaCost);
         }
 
         // plant needs to be deleted after students and before VMs to finish final deliveries to prevent deadlock
-        BottlingPlant* bottlingPlant = new BottlingPlant(printer, *nameServer, config.numVendingMachines,
+        BottlingPlant* bottlingPlant = new BottlingPlant(printer, nameServer, config.numVendingMachines,
             config.maxShippedPerFlavour, config.maxStockPerFlavour,
             config.timeBetweenShipments);
 
         Student* students[config.numStudents];
         for (unsigned int i = 0; i < config.numStudents; i++) {
-            students[i] = new Student(printer, *nameServer, *cardOffice, *groupoff, i, config.maxPurchases);  // will start in scope interacting with others
-            // students[i] = new Student(printer, nameServer, cardOffice, groupoff, i, config.maxPurchases);  // will start in scope interacting with others
+            students[i] = new Student(printer, nameServer, cardOffice, groupoff, i, config.maxPurchases);  // will start in scope interacting with others
         }
         
         for (unsigned int i = 0; i < config.numStudents; i++) {    // students done
@@ -94,11 +86,5 @@ int main(int argc, char* argv[]) {
         for (unsigned int i = 0; i < config.numVendingMachines; ++i) {
             delete vendingMachines[i];
         }
-
-        std::cout << "we are leaving" << std::endl;
-        delete parent;
-        delete cardOffice;
-        delete groupoff;
-        delete nameServer;
     }
 }

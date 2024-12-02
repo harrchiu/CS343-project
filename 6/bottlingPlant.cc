@@ -27,7 +27,6 @@ void BottlingPlant::main() {
 
     for (;;) {
         // todo: check if we need to yield on the first run
-        std::cout << "yielding" << std::endl;
         yield(timeBetweenShipments);    // perform production run
 
         unsigned int totalProduced = 0;
@@ -38,13 +37,9 @@ void BottlingPlant::main() {
         printer.print(Printer::Kind::BottlingPlant, 'G', totalProduced);
 
         _Accept(~BottlingPlant) {  // shutdown
-            std::cout << "are we here" << std::endl;
             _Accept(getShipment) {
-                std::cout << "bottlingplant is done, last shipment" << std::endl;
                 _Resume Shutdown() _At truck;   // propagate exception to truck
-                std::cout << "truck shutdown" << std::endl;
                 truckWaiting.signalBlock();
-                std::cout << "truck unblocked" << std::endl;
             }
             break;
         } or _Accept(getShipment) {
@@ -53,8 +48,4 @@ void BottlingPlant::main() {
         }
     }
     printer.print(Printer::Kind::BottlingPlant, 'F');
-}
-
-BottlingPlant::~BottlingPlant() {
-    std::cout << "deleting plant" << std::endl;
 }

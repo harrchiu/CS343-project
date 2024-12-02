@@ -17,7 +17,6 @@ Parent::Parent(Printer& prt, Bank& bank, unsigned int numStudents, unsigned int 
 void Parent::main() {
     for (;;) {      // yield busy wait
         _Accept(~Parent) {  // must check for destructor to know when to terminate
-            std::cout << "parent dtor called" << std::endl;
             printer.print(Printer::Kind::Parent, 'F', giftsGiven);  // finishing print
             return;
         } _Else{            // terminating else on accept statement (do not block)

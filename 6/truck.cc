@@ -44,8 +44,7 @@ void Truck::main() {
                 totalStock += cargo[i];
             }
             printer.print(Printer::Kind::Truck, 'P', totalStock);
-            // std::cout << "shipment got, totalStock is " << totalStock << " curMachine is " << curMachine << std::endl;
-
+            
             unsigned int endingMachine = (curMachine + 1) % numVendingMachines;  // save the starting machine
             while (totalStock > 0 && curMachine != endingMachine) {   // while there is soda on the truck and the truck has not made a complete cycle
                 unsigned int* machineStock = vendingMachines[curMachine]->inventory();
