@@ -25,6 +25,7 @@ void Student::main() {
 
     unsigned int bottlesPurchased = 0;
     unsigned int freeSodas = 0;
+    bool giftCardDeleted = false;
 
     // student needs to purchase max purchaseGoal bottles or quit before
     while (bottlesPurchased < purchaseGoal) {
@@ -36,9 +37,10 @@ void Student::main() {
                     machine->buy(favouriteFlavour, *giftCardFuture());
                     printer.print(Printer::Kind::Student, id, 'G', favouriteFlavour, giftCardFuture()->getBalance());
 
-                    delete giftCardFuture();    // delete it before we reset since it's student's responsibility
-                    giftCardFuture.reset();     // reset gift card because we will never use it again, to stop coming here
+                    delete giftCardFuture();    // delete it before we reset since it's studnet responsibility
+                    giftCardDeleted = true;
 
+                    giftCardFuture.reset();    // reset gift card because we will never use it again
                     bottlesPurchased++;         // did get bought!
                     break;
                 } or _Select(watCardFuture) {   // if watcard is ready
@@ -86,6 +88,12 @@ void Student::main() {
             }
         };
     } _Catch(WATCardOffice::Lost&) {} // do nothing, but now we can quit
+
+    if (!giftCardDeleted) {         // if gift card was not deleted
+        _Select(giftCardFuture) {   // ensure gift card has resolved before deleting
+            delete giftCardFuture();
+        }
+    }
 
     printer.print(Printer::Kind::Student, id, 'F', bottlesPurchased, freeSodas);
 }

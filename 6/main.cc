@@ -25,13 +25,13 @@ int main(int argc, char* argv[]) {
     try {
         switch (argc) {	// don't break. allow fall through
         case 4: if (strcmp(argv[3], "d") != 0) {    // processors
-            processors = convert(argv[1]); if (processors <= 0) throw cmd_error();
+            processors = convert(argv[3]); if (processors <= 0) throw cmd_error();
         }
         case 3: if (strcmp(argv[2], "d") != 0) {    // seed
             seed = convert(argv[2]); if (seed <= 0) throw cmd_error();
         }
         case 2: if (strcmp(argv[1], "d") != 0) {    // config
-            configFile = argv[3];
+            configFile = argv[1];
         }
         case 1: {
             break;
