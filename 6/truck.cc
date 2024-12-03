@@ -48,9 +48,8 @@ void Truck::main() {
             }
             printer.print(Printer::Kind::Truck, 'P', numBottlesTotal);
 
-            unsigned int endingMachine = (curMachine + 1) % numVendingMachines;  // save the starting machine
-
-            while (numBottlesTotal > 0 && curMachine != endingMachine) {              // while there is soda on the truck and the truck has not made a complete cycle
+            unsigned int i = 0;
+            while (numBottlesTotal > 0 && i < numVendingMachines) {              // while there is soda on the truck and the truck has not made a complete cycle
                 unsigned int* machineStock = vendingMachines[curMachine]->inventory();
                 printer.print(Printer::Kind::Truck, 'd', curMachine, numBottlesTotal);
 
@@ -76,6 +75,7 @@ void Truck::main() {
                 vendingMachines[curMachine]->restocked();           // restock the machine complete
                 printer.print(Printer::Kind::Truck, 'D', curMachine, numBottlesTotal);
                 curMachine = (curMachine + 1) % numVendingMachines; // move to the next machine
+                i++;
             }
 
             if (prng(100) == 0) {   // 1 in 100 chance of having a flat tire after delivery

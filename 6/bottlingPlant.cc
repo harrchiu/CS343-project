@@ -30,7 +30,7 @@ void BottlingPlant::main() {
 
         unsigned int totalProduced = 0;
         for (unsigned int i = 0; i < NUM_OF_FLAVOURS; ++i) {
-            productionStock[i] = prng(maxShippedPerFlavour);
+            productionStock[i] = prng(0, maxShippedPerFlavour);
             totalProduced += productionStock[i];
         }
         printer.print(Printer::Kind::BottlingPlant, 'G', totalProduced);
