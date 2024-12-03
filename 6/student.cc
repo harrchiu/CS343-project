@@ -25,6 +25,8 @@ void Student::main() {
     unsigned int bottlesPurchased = 0;
     unsigned int freeSodas = 0;
 
+    bool giftCardDeleted = false;
+
     while (bottlesPurchased < purchaseGoal) {
         yield(prng(1, 10));  // yield for a random time between 1 and 10
 
@@ -35,6 +37,8 @@ void Student::main() {
                     printer.print(Printer::Kind::Student, id, 'G', favouriteFlavour, giftCardFuture()->getBalance());
 
                     delete giftCardFuture();    // delete it before we reset since it's studnet responsibility
+                    giftCardDeleted = true;
+
                     giftCardFuture.reset();    // reset gift card because we will never use it again
                     bottlesPurchased++;         // did get bought!
                     break;
@@ -79,6 +83,12 @@ void Student::main() {
             }
         };
     } _Catch(WATCardOffice::Lost&) {} // do nothing
+
+    if (!giftCardDeleted) {         // if gift card was not deleted
+        _Select(giftCardFuture) {   // ensure gift card has resolved before deleting
+            delete giftCardFuture();
+        }
+    }
 
     printer.print(Printer::Kind::Student, id, 'F', bottlesPurchased, freeSodas);
 }
