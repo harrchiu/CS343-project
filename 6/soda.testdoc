@@ -1,6 +1,11 @@
 TEST DOCUMENTATION FOR soda.testdoc
 ===============================================
-The soda C++ program implements the interactions of a vending machine system, simulating tasks like soda delivery, vending machine restocking, and student purchases. It features components such as a bottling plant, delivery truck, vending machines, and WATCards, allowing for dynamic and concurrent scenarios including financial transactions, lost cards, and stock replenishments. The user is able to configure parameters of the simulation through a configuration file.
+The soda C++ program implements the interactions of a vending machine system, 
+simulating tasks like soda delivery, vending machine restocking, and student purchases. 
+It features components such as a bottling plant, delivery truck, vending machines,
+and WATCards, allowing for dynamic and concurrent scenarios including financial transactions, 
+lost cards, and stock replenishments. The user is able to configure parameters of 
+the simulation through a configuration file.
 
 USER INTERFACE TESTING
 
@@ -21,7 +26,9 @@ USER INTERFACE TESTING
     Usage: ./soda  [ config-file | 'd' [ seed ( > 0) | 'd' [ processors (> 0) | 'd'] ] ]
 
     ANALYSIS
-    From the above, we see the program correctly handles parsing arguments for config file, the seed and the processor. It prints an appropriate message for invalid parameters and config file paths.
+    From the above, we see the program correctly handles parsing arguments for 
+    config file, the seed and the processor. It prints an appropriate message 
+    for invalid parameters and config file paths.
 
 ALGORITHM TESTING
   For algorithm testing, we will describe a selection of interesting events below.
@@ -75,11 +82,22 @@ ALGORITHM TESTING
 
     EVENT 1:
     -------
-    On line 11, we see an event where the Student 0 buys a drink with their WATCard since they do not have their gift card yet. The output shows that their WATCard is delivered on line 10 (T0,5 under Cour0) and their gift card is deposited on line 13 (D0,2 under Groupoff). On line 11, the student must then buy their drink using their WATCard (B1,3) since that is the only option they currently have. This event shows the correct usage of the WATCard when the gift card is not delivered first.
+    On line 11, we see an event where the Student 0 buys a drink with their 
+    WATCard since they do not have their gift card yet. The output shows that 
+    their WATCard is delivered on line 10 (T0,5 under Cour0) and their gift card 
+    is deposited on line 13 (D0,2 under Groupoff). On line 11, the student must 
+    then buy their drink using their WATCard (B1,3) since that is the only option 
+    they currently have. This event shows the correct usage of the WATCard when 
+    the gift card is not delivered first.
 
     EVENT 2:
     -------
-    On line 17, a courier loses a WATCard during a transfer (L1 on line 17 under Cour0). Since this occurs after the student has already made a purchase with a gift card (G1,0 on line 14) and they only want to buy 1 bottle, this lost WATCard does not need to be replaced. The program correctly handles this by not requesting a new WATcard from the WAT office and ensuring that Student 1 terminates successfully.
+    On line 17, a courier loses a WATCard during a transfer (L1 on line 17 under 
+    Cour0). Since this occurs after the student has already made a purchase with 
+    a gift card (G1,0 on line 14) and they only want to buy 1 bottle, this lost
+    WATCard does not need to be replaced. The program correctly handles this by 
+    not requesting a new WATcard from the WAT office and ensuring that Student 1 
+    terminates successfully.
 
   TESTCASE 2:
   -------
@@ -190,20 +208,57 @@ ALGORITHM TESTING
 
     EVENT 3:
     -------
-    We see an event where an ad plays (A2 under Stud1 and A under Mach0 on line 67) before an item is purchased. Since the ad is not followed by an X, the student watches the ad and does not skip it. After the ad, the student receives a free soda and proceeds to buy their soda (as shown by B2,10 under Stud1 and B2,2  under Mach0 on line 68). When the student terminates, they have bought 3 sodas and received 1 free soda (as indicated by F3,1 on line 78) and the free soda is correctly excluded from their purchased soda count. 
+    We see an event where an ad plays (A2 under Stud1 and A under Mach0 on line 67) 
+    before an item is purchased. Since the ad is not followed by an X, the student
+    watches the ad and does not skip it. After the ad, the student receives a free 
+    soda and proceeds to buy their soda (as shown by B2,10 under Stud1 and B2,2 
+    under Mach0 on line 68). When the student terminates, they have bought 3 sodas 
+    and received 1 free soda (as indicated by F3,1 on line 78) and the free soda 
+    is correctly excluded from their purchased soda count. 
 
     EVENT 4:
     -------
-    We see an event where a WATCard attempting to transfer $11 (t1,11 under Cour0 on line 60) is lost by the courier (L1 under Cour0 and L under Stud1 on line 50). Since the student is still trying to make a purchase, a new WATCard is successfully requested and created from the WAT Office (as seen by C1,5 on line 50). This card then gets delivered again by the courier -- note the transfer amount is now $5 since that is the balanced on the new WATCard (as seen by t1,5 on line 52 and T1,5 on line 57 under Cour0). This event shows the correct handling of a lost WATCard and the replacement process.
+    We see an event where a WATCard attempting to transfer $11 (t1,11 under Cour0 
+    on line 60) is lost by the courier (L1 under Cour0 and L under Stud1 on line 50).
+    Since the student is still trying to make a purchase, a new WATCard is 
+    successfully requested and created from the WAT Office (as seen by C1,5 on 
+    line 50). This card then gets delivered again by the courier -- note the 
+    transfer amount is now $5 since that is the balanced on the new WATCard (as 
+    seen by t1,5 on line 52 and T1,5 on line 57 under Cour0). This event shows 
+    the correct handling of a lost WATCard and the replacement process.
 
     EVENT 5:
     -------
-    We see an event where Student 1 has insufficient funds to buy a soda, which is priced at $6 when they only have $5 on their WATCard (as seen by T1,5 on line 57 under Cour0). In this case, the student needs to transfer the current soda cost plus $5 to their WATCard (6+5=11) -- this is first completed by the WAT Office (T1,11 on line 58) and then successfully delivered. This is seen by t1,11 and T1,11 on lines 60 and 66 under Cour0 (note that t1,11 is completed when W is completed under WAT Office on line 60). Upon receiving the funds, Student 1 can buy their next soda (B2,10 and B2,2 on line 68). This event shows the correct handling of insufficient funds and the process for reloading the WATCard.
+    We see an event where Student 1 has insufficient funds to buy a soda, which 
+    is priced at $6 when they only have $5 on their WATCard (as seen by T1,5 on 
+    line 57 under Cour0). In this case, the student needs to transfer the 
+    current soda cost plus $5 to their WATCard (6+5=11) -- this is first completed
+    by the WAT Office (T1,11 on line 58) and then successfully delivered. This 
+    is seen by t1,11 and T1,11 on lines 60 and 66 under Cour0 (note that t1,11 
+    is completed when W is completed under WAT Office on line 60). Upon receiving 
+    the funds, Student 1 can buy their next soda (B2,10 and B2,2 on line 68). 
+    This event shows the correct handling of insufficient funds and the process 
+    for reloading the WATCard.
 
     EVENT 6:
     -------
-    We see an event where a vending machine is out of stock and Student 0 must busy-wait for the machine to restock. On line 29, the Machine0 shows B2,0 indicating that there are 0 remaining sodas of flavour 2. Before the student attempts to make their next purchase of this soda, they must busy-wait for the machine to restock (as seen by r and R on lines 31-32 under Mach0) as it receives a shipment of 1 soda since MaxShippedPerFlavour=1. After the delivery is complete (D0,0 under Truck on line 32), the student ends busy-waiting and buys the soda with B2,4 on line 33 and the machine again shows B2,0 since there are now 0 remaining sodas left.
+    We see an event where a vending machine is out of stock and Student 0 must 
+    busy-wait for the machine to restock. On line 29, the Machine0 shows B2,0 
+    indicating that there are 0 remaining sodas of flavour 2. Before the student 
+    attempts to make their next purchase of this soda, they must busy-wait for 
+    the machine to restock (as seen by r and R on lines 31-32 under Mach0) as it 
+    receives a shipment of 1 soda since MaxShippedPerFlavour=1. After the delivery 
+    is complete (D0,0 under Truck on line 32), the student ends busy-waiting and 
+    buys the soda with B2,4 on line 33 and the machine again shows B2,0 since 
+    there are now 0 remaining sodas left.
 
     EVENT 7:
     -------
-    The output above illustrates an example where Student 1 has has both their WATCard (delivered by the Courier at T1,5 on line 15) and their gift card at the time of purchase, but the student chooses to use the gift card to buy a soda (G2,0 under Stud1 and B2,0 under Mach0 on line 21) over their WATcard to complete their purchase, as specified. The giftcard balance of $SodaCost is sufficient to buy one soda and it is reset after the purchase such that their next purchase made (B2,10 on line 68) is with their WATCard. This event shows the correct handling of the gift card and its priority over the WATCard.
+    The output above illustrates an example where Student 1 has has both their 
+    WATCard (delivered by the Courier at T1,5 on line 15) and their gift card at 
+    the time of purchase, but the student chooses to use the gift card to buy a 
+    soda (G2,0 under Stud1 and B2,0 under Mach0 on line 21) over their WATcard to 
+    complete their purchase, as specified. The giftcard balance of $SodaCost is 
+    sufficient to buy one soda and it is reset after the purchase such that their 
+    next purchase made (B2,10 on line 68) is with their WATCard. This event shows 
+    the correct handling of the gift card and its priority over the WATCard.
