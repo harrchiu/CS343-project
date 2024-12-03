@@ -81,11 +81,11 @@ unsigned int Printer::getDataArrIndex(Kind kind, unsigned int lid) {
     }
 }
 
-// helper function - set basic info given an index
+// helper function - set basic info given an index of the column data buffer we're changing
 void Printer::printBasic(Kind kind, char state, unsigned int index) {
     // first check if we're about to overwrite, data
     if (columnDataArr[index].isWrittenTo) {
-        flush();        // if so, flush first, then update
+        flush();                             // if so, flush first, then update
     }
     columnDataArr[index].isWrittenTo = true; // flip writing state
     columnDataArr[index].state = state;
@@ -99,13 +99,11 @@ void Printer::print(Kind kind, char state) {
     unsigned int index = getDataArrIndex(kind);
     printBasic(kind, state, index);
 }
-
 void Printer::print(Kind kind, char state, unsigned int value1) {
     unsigned int index = getDataArrIndex(kind);
     printBasic(kind, state, index);
     columnDataArr[index].value1 = value1;
 }
-
 void Printer::print(Kind kind, char state, unsigned int value1, unsigned int value2) {
     unsigned int index = getDataArrIndex(kind);
     printBasic(kind, state, index);
@@ -113,7 +111,7 @@ void Printer::print(Kind kind, char state, unsigned int value1, unsigned int val
     columnDataArr[index].value2 = value2;
 }
 
-// lid calls
+// ------------------ lid calls
 void Printer::print(Kind kind, unsigned int lid, char state) {
     // first figure out the index of columnDataArr
     unsigned int index = getDataArrIndex(kind, lid);

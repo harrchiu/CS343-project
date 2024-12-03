@@ -12,18 +12,18 @@ _Monitor Bank;
 _Monitor Printer;
 
 _Task WATCardOffice{
-  struct Args { // args to create the card
-    unsigned int sid;       // passed in
-    unsigned int amount;    // starting amount
-    WATCard* card;        // the card
+  struct Args {                     // args to create the card
+    unsigned int sid;               // passed in
+    unsigned int amount;            // starting amount
+    WATCard* card;                  // the card
   };
-  struct Job {							// marshalled arguments and return future
-      Args args; 							// call arguments (YOU DEFINE "Args")
+  struct Job {							        // marshalled arguments and return future
+      Args args; 							      // call arguments (YOU DEFINE "Args")
       WATCard::FWATCard result;			// return future
       Job(Args args) : args(args) {}
   };
   // can modify as fit
-  _Task Courier{   // talks to bank to create watCard on Office::create()
+  _Task Courier{                        // talks to bank to create watCard on Office::create()
       unsigned int courierId;
       WATCardOffice& watCardOffice;     // transfer and request work from office
       Printer& printer;
@@ -33,7 +33,7 @@ _Task WATCardOffice{
     public:
       Courier(unsigned int courierId, WATCardOffice& watCardOffice, Printer& printer, Bank& bank);
       ~Courier();
-  };					// communicates with bank
+  };
   void main();
 public:
   _Exception Lost {};						// lost WATCard

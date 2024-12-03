@@ -17,9 +17,10 @@ NameServer::NameServer(Printer& prt, unsigned int numVendingMachines, unsigned i
 
 NameServer::~NameServer() {
     // delete array that holds the VMs
+    // main delete the actual vending machine pointers individually when done
+    // so we just need to free the memory of collection
     delete[] vendingMachines;
     delete[] modulos;
-    // TODO: ensure that the VMs themselves are deleted elsewhere... or that main does it...
 
     printer.print(Printer::Kind::NameServer, 'F');  // finishing print
 }
@@ -40,7 +41,7 @@ VendingMachine* NameServer::getMachine(unsigned int id) {
 
     // update so the student can cycle through all the vms
     modulos[id] += 1;
-    modulos[id] %= numVendingMachines;
+    modulos[id] %= numVendingMachines;  // cap off if overflowed
 
     printer.print(Printer::Kind::NameServer, 'N', id, vm->getId());
 
@@ -61,9 +62,11 @@ void NameServer::main() {
 
     for (;;) {
         _Accept(~NameServer) {
+            // finishing print in dtor
             return;
         }
-        or _Accept(getMachineList) {}
+        or _Accept(getMachineList) {
+        }
         or _Accept(getMachine) {}
     }
     // finishing print in dtor;

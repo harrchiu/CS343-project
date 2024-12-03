@@ -20,10 +20,10 @@ void VendingMachine::buy(BottlingPlant::Flavours flavour, WATCard& card) {
     buyCond.wait();     // let main figure out the error, then come back here to actually raise it
 
     switch (buyException) {
-    case FUNDS: _Throw Funds();
-    case STOCK: _Throw Stock();
-    case FREE:  _Throw Free();
-    default:    break; // No exception
+        case FUNDS: _Throw Funds();
+        case STOCK: _Throw Stock();
+        case FREE:  _Throw Free();
+        default:    break; // No exception
     }
 }
 

@@ -2,8 +2,8 @@
 #define _name_server_h_
 
 _Monitor Printer;
-_Task VendingMachine;   // forward ref
 
+_Task VendingMachine;   // forward ref
 _Task NameServer{
     Printer & printer;
     unsigned int numVendingMachines, numStudents;

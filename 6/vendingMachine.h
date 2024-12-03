@@ -7,14 +7,13 @@
 _Monitor Printer;
 
 _Task NameServer;   // fwd reference
-
 _Task VendingMachine{
     Printer & printer;
     NameServer& nameServer;
-    unsigned const int id;      // constant after assignment
+    unsigned const int id;          // constant after assignment
     unsigned const int sodaCost;
 
-    bool isBeingRestocked = false;  // need a state to keep track if the VM is currently being stocked
+    bool isBeingRestocked = false;  // need a state to keep track if the VM is currently being stocked to prevent buy
 
 
     // inventory of all flavours - should be constant on runtime
@@ -24,7 +23,7 @@ _Task VendingMachine{
     // for customer's order to be linked back to main(), where the logic should happen
     BottlingPlant::Flavours customerFlavour;
     WATCard* customerCard;
-    uCondition buyCond; // to block or allow blocked buyer to continue
+    uCondition buyCond;                             // to block or allow blocked buyer to continue
     enum BuyException { FUNDS, STOCK, FREE, NONE }; // communicate which error happened back to buyer
     BuyException buyException = NONE;
 

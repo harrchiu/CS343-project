@@ -1,4 +1,3 @@
-#include <iostream>
 #include "groupoff.h"
 #include "printer.h"
 #include "WATcard.h"
@@ -16,7 +15,7 @@ Groupoff::~Groupoff() {
 void Groupoff::main() {
     // begins by first accepting a call from all students to obtain a future giftCard
     while (giftCardsMade < numStudents) {
-        _Accept(giftCard) {
+        _Accept(giftCard) { // block til done
             giftCardsMade += 1;
         }
     }
@@ -28,30 +27,27 @@ void Groupoff::main() {
     for (unsigned int i = 0;i < numStudents;i++) {   // fill the array incrementing
         replacementOrder[i] = i;
     }
-    // now randomly swap
+    // now randomly swap - from potato shuffle
     for (unsigned int counter = 0; counter < numStudents; counter += 1) {
         std::swap(replacementOrder[0], replacementOrder[prng(numStudents)]);
-        // i mean this supposedly produces a more uniform shuffle than the
-        // one used in the prev assn so idk
-        // std::swap(replacementOrder[counter], replacementOrder[prng(numStudents - 1 - counter)]);
     }
 
-    // stop looping after giving out all gift cards
-    for (unsigned int i = 0;i < numStudents;i++) {
-        _Accept(~Groupoff) {    // wait for dtor
+    // stop looping after giving out all gift cards, only one per then we're done
+    for (unsigned int i = 0;i < numStudents;i += 1) {
+        _Accept(~Groupoff) {    // wait for dtor first, don't block others
             break;              // gift cards should be destroyed by students
         } _Else{   // yield must not block dtor call
             yield(groupoffDelay);
             unsigned int studentId = replacementOrder[i];   // get the random sid
+
             // make new wat card and fulfill the promise
             WATCard* watCard = new WATCard();
             watCard->deposit(sodaCost);         // free money
             cards[studentId].delivery(watCard);
 
-            printer.print(Printer::Kind::Groupoff, 'D', studentId, sodaCost);
+            printer.print(Printer::Kind::Groupoff, 'D', studentId, sodaCost);   // print done
         }
     }
-
     printer.print(Printer::Kind::Groupoff, 'F');  // finishing print
 }
 

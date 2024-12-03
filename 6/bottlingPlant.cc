@@ -15,19 +15,18 @@ BottlingPlant::BottlingPlant(Printer& prt, NameServer& nameServer, unsigned int 
 
 void BottlingPlant::getShipment(unsigned int cargo[]) {
     for (unsigned int i = 0; i < NUM_OF_FLAVOURS; ++i) {
-        cargo[i] = productionStock[i];   // copy production to cargo
-        productionStock[i] = 0;          // reset production
+        cargo[i] = productionStock[i];   // move to cargo
+        productionStock[i] = 0;          // get ready for next iter
     }
-    truckWaiting.signalBlock();     // wait for new production
+    truckWaiting.signalBlock();          // block for next
 }
 
 void BottlingPlant::main() {
-    printer.print(Printer::Kind::BottlingPlant, 'S');
-    Truck truck(printer, nameServer, *this, numVendingMachines, maxStockPerFlavour);    // create a truck
+    printer.print(Printer::Kind::BottlingPlant, 'S');       // starting print
+    Truck truck(printer, nameServer, *this, numVendingMachines, maxStockPerFlavour);
 
     for (;;) {
-        // todo: check if we need to yield on the first run
-        yield(timeBetweenShipments);    // perform production run
+        yield(timeBetweenShipments);            // production run
 
         unsigned int totalProduced = 0;
         for (unsigned int i = 0; i < NUM_OF_FLAVOURS; ++i) {
@@ -36,7 +35,7 @@ void BottlingPlant::main() {
         }
         printer.print(Printer::Kind::BottlingPlant, 'G', totalProduced);
 
-        _Accept(~BottlingPlant) {  // shutdown
+        _Accept(~BottlingPlant) {               // shutdown
             _Accept(getShipment) {
                 _Resume Shutdown() _At truck;   // propagate exception to truck
                 truckWaiting.signalBlock();
@@ -44,8 +43,8 @@ void BottlingPlant::main() {
             break;
         } or _Accept(getShipment) {
             printer.print(Printer::Kind::BottlingPlant, 'P');   // log picked up
-            truckWaiting.signalBlock(); // signal truck to pick up shipment
+            truckWaiting.signalBlock();                         // signal truck to pick up shipment
         }
     }
-    printer.print(Printer::Kind::BottlingPlant, 'F');
+    printer.print(Printer::Kind::BottlingPlant, 'F');       // finishing print
 }

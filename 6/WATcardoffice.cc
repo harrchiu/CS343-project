@@ -88,7 +88,7 @@ void WATCardOffice::main() {
         }
         or _When(!courierJobQueue.empty()) _Accept(requestWork) {}
         or _Accept(create || transfer) {}
-    }   // for
+    }
     // finish is printed in destructor
 }
 
@@ -140,7 +140,7 @@ void WATCardOffice::Courier::main() {
         }
 
         delete currentJob; // job is done and popped already
-    }
+    }   // main for
 
     printer.print(Printer::Kind::Courier, courierId, 'F'); // finishing
 }

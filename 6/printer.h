@@ -31,8 +31,10 @@ _Monitor Printer{
     ColumnData* columnDataArr;        // keep track of each column's current info
 
     // helper functions
+    // get the index given the kind (and lid)
     unsigned int getDataArrIndex(Kind kind);
     unsigned int getDataArrIndex(Kind kind, unsigned int lid);
+    // modify the print state of the index directly
     void printBasic(Kind kind, char state, unsigned int index);
 };
 

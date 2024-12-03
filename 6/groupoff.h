@@ -1,10 +1,8 @@
 #ifndef _groupoff_h_
 #define _groupoff_h_
-
 #include "WATcard.h"
 
 _Monitor Printer;
-
 _Task Groupoff{
     Printer & printer;
     unsigned int numStudents, sodaCost, groupoffDelay;

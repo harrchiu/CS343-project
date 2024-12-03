@@ -8,6 +8,7 @@ Bank::~Bank() {
     delete[] bankAccounts;
 }
 
+// put the money in the bag
 void Bank::deposit(unsigned int id, unsigned int amount) {
     bankAccounts[id] += amount;
 }
